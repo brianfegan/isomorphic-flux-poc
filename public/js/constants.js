@@ -1,0 +1,6 @@
+var constants = {
+	LOAD_PRODUCTS_SUCCESS: 'LOAD_PRODUCTS_SUCCESS',
+	LOAD_CATEGORIES_SUCCESS: 'LOAD_CATEGORIES_SUCCESS'
+};
+
+module.exports = constants;

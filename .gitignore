@@ -1,0 +1,5 @@
+.project
+npm-debug.log
+/data
+/node_modules
+/public/js/dist
