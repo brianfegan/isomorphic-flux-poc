@@ -20,7 +20,7 @@ exports.CategoriesStore = Fluxxor.createStore({
     
   loadStoreData: function(serverCbFn) {
 	  var that = this;
-	  this.req = request.get('http://localhost:3000/categories').end(function(err, resp) {
+	  this.req = request.get('http://localhost:3000/api/categories').end(function(err, resp) {
 		  that.flux.actions.loadCategoriesSuccess(resp.body);
 		  that.req = null;
 		  if (typeof serverCbFn === 'function') {
@@ -66,10 +66,10 @@ exports.ProductsStore = Fluxxor.createStore({
   },
     
   loadStoreData: function(serverCbFn, data) {
-	  //console.log('loadStoreData...getProducts...data...');
-	  //console.log(data);
+	  console.log('loadStoreData...getProducts');
+	  console.log(data);
 	  var that = this;
-	  var url = 'http://localhost:3000/products';
+	  var url = 'http://localhost:3000/api/products';
 	  if ( (typeof data !== 'undefined') && (typeof data.categoryId === 'number') ) {
     	url = url + '/' + data.categoryId;
       };

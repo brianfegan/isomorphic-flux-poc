@@ -40,8 +40,8 @@ var Products = React.createClass({
   },
   
   render: function() {
-	//console.log('RENDER Products...');
-	//console.log(this.props);
+	console.log('RENDER Products...');
+	console.log(this.props);
     return (
     	<div id="wrapper">
 			<header>
@@ -53,12 +53,7 @@ var Products = React.createClass({
 					<ProductsList products={this.state.products} />	
 				</section>
 				<aside>
-					<div>
-						Filter by:
-						<a href="#" className="selected">Alphabetically</a>
-						<a href="#">Price: Low to High</a>
-						<a href="#">Price: High to Low</a>
-					</div>
+					<div></div>
 				</aside>
 			</div>
 			<footer>
@@ -72,7 +67,7 @@ var Products = React.createClass({
 var FilterItem = React.createClass({
 	render: function() {
 		var category = this.props.category,
-			href = '/'+category.id;
+			href = '/products/'+category.id;
 		return (
 			<Link to={href} href={href} className={this.props.className} data-cat-id={category.id}>{category.name}</Link>
 		);
@@ -91,7 +86,7 @@ var FiltersList = React.createClass({
 		});
 		return (
 			<nav>				
-				<Link to={'/'} className={allClassName}>All Products</Link>
+				<Link to={'/products'} href={'/products'} className={allClassName}>All Products</Link>
 				{items}
 			</nav>
 		);
@@ -100,7 +95,7 @@ var FiltersList = React.createClass({
 
 var ProductItem = React.createClass({
 	render: function() {
-		var image = 'img/'+this.props.product.image,
+		var image = '/img/'+this.props.product.image,
 			price = 'Price.......$'+this.props.product.price;
 		return (
 			<li>

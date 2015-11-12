@@ -4,8 +4,8 @@ var Fluxxor = require('fluxxor');
 var ReactRouter = require('react-router');
 var Router = ReactRouter.Router;
 var Route = ReactRouter.Route;
-//var createHistory = require('history').createHashHistory;
-var createHistory = require('history/lib/createHashHistory');
+//var createHistory = require('history/lib/createHashHistory');
+var createHistory = require('history/lib/createBrowserHistory');
 var history = createHistory();
 
 // Require App Modules
@@ -36,7 +36,7 @@ var App = React.createClass({
 React.render((
 	<Router history={history}>
 		<Route path="/" component={App}>
-			<Route path="/:categoryId" component={App} />
+			<Route path="/products(/:categoryId)" component={App} />
 		</Route>
 	</Router>
 ), document.getElementById("body"));
