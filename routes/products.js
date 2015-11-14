@@ -6,7 +6,6 @@ var ProductsStore = require('../public/js/stores').ProductsStore;
 var CategoriesStore = require('../public/js/stores').CategoriesStore;
 var Products = React.createFactory(require("../public/js/products"));
 
-
 var express = require('express');
 var router = express.Router();
 
@@ -20,12 +19,17 @@ flux.serialize = require('../public/js/isomorphic').serialize;
 /* GET products page. */
 router.get('/:categoryId?', function(req, res, next) {
 	var categoryId = req.params.categoryId;
-	if (typeof categoryId !== 'undefined') {
-		categoryId = parseInt(categoryId, 10);
+	if (typeof categoryId === 'undefined') {
+		categoryId = '';
+	}
+	var sort = req.query.sort;
+	if ( (sort !== 'priceasc') && (sort !== 'pricedesc') ) {
+		sort = '';
 	}
 	var HtmlElement = React.createElement(Products, {
 		flux: flux,
-		params: {categoryId:categoryId}
+		params: {categoryId:categoryId},
+		query: {sort:sort}
 	});
 	// Call serverFetch action to prepopulate data stores
 	flux.actions.serverFetch(function(){
@@ -36,7 +40,7 @@ router.get('/:categoryId?', function(req, res, next) {
 			fluxData: fluxData,
 			title: 'Express App'
 		});
-	}, {categoryId:categoryId});
+	}, {categoryId:categoryId, sort:sort});
 });
 
 module.exports = router;

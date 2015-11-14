@@ -8,52 +8,58 @@ var FluxMixin = Fluxxor.FluxMixin(React),
 var Products = React.createClass({
   mixins: [FluxMixin, StoreWatchMixin("ProductsStore", "CategoriesStore")],
   
-  getCategories: function() {
-	return (this.getFlux().store("CategoriesStore").getCategories());
-  },
-  
   getProducts: function(props) {
-	var categoryId = props.params.categoryId;
-	if (typeof categoryId !== 'undefined') {
-		categoryId = parseInt(categoryId, 10);
-	}
-	return (this.getFlux().store("ProductsStore").getProducts(categoryId));
+	return this.getFlux().store("ProductsStore").getProducts(this.getNormalizedProp(props.params.categoryId), this.getNormalizedProp(props.query.sort));
   },
 
   getStateFromFlux: function() {
     return {
     	products: this.getProducts(this.props),
-    	categories: this.getCategories()
+    	categories: this.getFlux().store("CategoriesStore").getCategories()
     }
   },
 
   /*componentDidMount: function() {
-	  console.log('componentDidMount');
 	  this.loadProducts(this.props);
-	  this.setState({categories: this.getCategories(), products:this.getProducts(this.props)});
+	  this.setState({categories: this.getFlux().store("CategoriesStore").getCategories(), products:this.getProducts(this.props)});
   },*/
   
   componentWillReceiveProps: function(nextProps) {
-	  //console.log('componentWillReceiveProps');
-	  //this.loadProducts(nextProps);
 	  this.setState({products:this.getProducts(nextProps)});
   },
   
+  getNormalizedProp: function(prop) {
+	  if (typeof prop === 'undefined') {
+		  prop = '';
+	  }
+	  return prop;
+  },
+  
+  getSortObj: function(sortStr) {
+	  var sortObj = {str: '', query: {}};
+	  	if (sortStr !== '') {
+	  		sortObj.str = sortStr;
+			sortObj.search = '?sort='+sortStr;
+			sortObj.query = {sort:sortStr};		
+		}
+	  return sortObj;
+  },
+  
   render: function() {
-	console.log('RENDER Products...');
-	console.log(this.props);
-    return (
+	var sortObj = this.getSortObj(this.getNormalizedProp(this.props.query.sort));
+	var activeCategoryId = this.getNormalizedProp(this.props.params.categoryId);
+	return (
     	<div id="wrapper">
 			<header>
 				<div><h1>&#60;codetest&#62;</h1></div>
-				<FiltersList categories={this.state.categories} activeCategoryId={this.props.params.categoryId} />
+				<FiltersList categories={this.state.categories} activeCategoryId={activeCategoryId} sortObj={sortObj} />
 			</header>
 			<div id="main">
 				<section id="content">
 					<ProductsList products={this.state.products} />	
 				</section>
 				<aside>
-					<div></div>
+					<SortList activeCategoryId={activeCategoryId} sortObj={sortObj} />
 				</aside>
 			</div>
 			<footer>
@@ -63,13 +69,44 @@ var Products = React.createClass({
     );
   }
 });
+
+var SortList = React.createClass({
+	render: function() {
+		var activeCategoryId = this.props.activeCategoryId;
+		var sortObj = this.props.sortObj;
+		var href = '/products/';
+		var sortClasses = { alpha:'', priceasc:'', pricedesc:'' };
+		if (activeCategoryId !== '') {
+			href = href + activeCategoryId;
+		}
+		switch (sortObj.str) {
+			case 'priceasc':
+				sortClasses.priceasc = 'selected';
+				break;
+			case 'pricedesc':
+				sortClasses.pricedesc = 'selected';
+				break;
+			default:
+				sortClasses.alpha = 'selected';
+		}
+		return (
+			<div>
+				Sort by:
+				<Link to={href} href={href} className={sortClasses.alpha}>Alphabetically</Link>
+				<Link to={href} query={{sort:'priceasc'}} href={href+'?sort=priceasc'} className={sortClasses.priceasc}>Price: Low to High</Link>
+				<Link to={href} query={{sort:'pricedesc'}} href={href+'?sort=pricedesc'} className={sortClasses.pricedesc}>Price: High to Low</Link>
+			</div>
+		);
+	}
+});
   
 var FilterItem = React.createClass({
 	render: function() {
 		var category = this.props.category,
+			sortObj = this.props.sortObj,
 			href = '/products/'+category.id;
 		return (
-			<Link to={href} href={href} className={this.props.className} data-cat-id={category.id}>{category.name}</Link>
+			<Link to={href} query={sortObj.query} href={href+sortObj.search} className={this.props.className}>{category.name}</Link>
 		);
 	}
 });
@@ -78,15 +115,17 @@ var FiltersList = React.createClass({
 	mixins: [FluxMixin],
 	render: function() {
 		var items = [],
+			sortObj = this.props.sortObj,
+			href = '/products',
 			activeCategoryId = this.props.activeCategoryId,
-			allClassName = (typeof activeCategoryId === 'undefined') ? 'selected' : '';
+			allClassName = (activeCategoryId === '') ? 'selected' : '';
 		this.props.categories.forEach(function(category){
 			var className = (parseInt(activeCategoryId, 10) === category.id) ? 'selected' : '';
-			items.push(<FilterItem category={category} className={className} key={category.id} />);
+			items.push(<FilterItem category={category} className={className} key={category.id} sortObj={sortObj} />);
 		});
 		return (
 			<nav>				
-				<Link to={'/products'} href={'/products'} className={allClassName}>All Products</Link>
+				<Link to={href} query={sortObj.query} href={href+sortObj.search} className={allClassName}>All Products</Link>
 				{items}
 			</nav>
 		);

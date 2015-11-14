@@ -25,18 +25,16 @@ flux.hydrate(window.fluxData);
 //  }
 //});
 
-//React.render(<Products flux={flux} />, document.getElementById("body"));
-
 var App = React.createClass({
 	render: function() {
-		return (<Products flux={flux} params={this.props.params} />);
+		return (<Products flux={flux} params={this.props.params} query={this.props.location.query} />);
 	}
 });
 
 React.render((
 	<Router history={history}>
 		<Route path="/" component={App}>
-			<Route path="/products(/:categoryId)" component={App} />
+			<Route path="products(/:categoryId)" component={Products} />
 		</Route>
 	</Router>
 ), document.getElementById("body"));
