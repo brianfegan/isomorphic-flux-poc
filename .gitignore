@@ -2,4 +2,4 @@
 npm-debug.log
 /data
 /node_modules
-/public/dist
+/public/js

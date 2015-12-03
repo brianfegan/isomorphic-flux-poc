@@ -4,11 +4,11 @@ var reactify = require('reactify');
 var source = require('vinyl-source-stream');
 
 gulp.task('browserify', function(){
-	browserify('./public/js/main.js')
+	browserify('./scripts/main.js')
 		.transform('reactify')
 		.bundle()
 		.pipe(source('main.js'))
-		.pipe(gulp.dest('public/dist/js'))
+		.pipe(gulp.dest('public/js'))
 });
 
 //gulp.task('copy', function(){
@@ -19,5 +19,6 @@ gulp.task('browserify', function(){
 //});
 
 gulp.task('default',['browserify'], function(){
-	return gulp.watch('public/js/**/*.*', ['browserify']);
+	//return gulp.watch('public/js/**/*.*', ['browserify']);
+	return gulp.watch('scripts/**/*.*', ['browserify']);
 });

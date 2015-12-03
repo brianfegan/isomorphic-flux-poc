@@ -4,7 +4,6 @@ var Fluxxor = require('fluxxor');
 var ReactRouter = require('react-router');
 var Router = ReactRouter.Router;
 var Route = ReactRouter.Route;
-//var createHistory = require('history/lib/createHashHistory');
 var createHistory = require('history/lib/createBrowserHistory');
 var history = createHistory();
 
