@@ -18,12 +18,6 @@ var flux = new Fluxxor.Flux({ProductsStore: new ProductsStore(), CategoriesStore
 flux.hydrate = require('./isomorphic').hydrate;
 flux.hydrate(window.fluxData);
 
-//flux.on("dispatch", function(type, payload) {
-//  if (console && console.log) {
-//    console.log("[Dispatch]", type, payload);
-//  }
-//});
-
 var App = React.createClass({
 	render: function() {
 		return (<Products flux={flux} params={this.props.params} query={this.props.location.query} />);

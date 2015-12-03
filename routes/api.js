@@ -9,13 +9,12 @@ router.get('/:collection/:itemId?', function(req, res, next) {
 	if ( (key === 'products') || (key === 'categories') ) {
 		
 		var db = req.db;
-		var collection = [];
+		var collection = db.get(key);
 		var findObj = {};
 		var opts = { sort:{name:1} };
 		
 		if (key === 'products') {
 			
-			collection = db.get('productcollection');
 			var categoryId = req.params.itemId;
 			if (typeof categoryId !== 'undefined') {
 				findObj = {'categories':parseInt(categoryId, 10)};
@@ -30,8 +29,6 @@ router.get('/:collection/:itemId?', function(req, res, next) {
 				}
 			}
 			
-		} else {
-			collection = db.get('categorycollection');
 		}
 		
 		collection.find(findObj,opts,function(e,docs){

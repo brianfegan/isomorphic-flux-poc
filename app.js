@@ -9,20 +9,13 @@ var bodyParser = require('body-parser');
 //DB Code
 var mongo = require('mongodb');
 var monk = require('monk');
-var db = monk('localhost:27017/isobar-node');
+var db = monk('localhost:27017/isomorphic-poc');
 
 var routes = require('./routes/index');
 var api = require('./routes/api');
 var products = require('./routes/products');
 
 var app = express();
-
-//var hbs = exphbs.create({
-//	defaultLayout: 'main',
-//	helpers: {
-//		title: function() { return 'This App'; }
-//	}
-//});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
