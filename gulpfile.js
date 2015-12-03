@@ -11,14 +11,6 @@ gulp.task('browserify', function(){
 		.pipe(gulp.dest('public/js'))
 });
 
-//gulp.task('copy', function(){
-//	gulp.src('src/index.html')
-//		.pipe(gulp.dest('dist'));
-//	gulp.src('src/assets/**/*.*')
-//		.pipe(gulp.dest('dist/assets'));
-//});
-
 gulp.task('default',['browserify'], function(){
-	//return gulp.watch('public/js/**/*.*', ['browserify']);
 	return gulp.watch('scripts/**/*.*', ['browserify']);
 });
