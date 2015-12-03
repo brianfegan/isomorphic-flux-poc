@@ -49,3 +49,5 @@ We just need to run gulp and start our app.
 gulp
 npm start
 ```
+
+View in the browser at: <code>http://localhost:3000/</code>
