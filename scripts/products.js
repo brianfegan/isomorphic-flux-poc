@@ -36,12 +36,12 @@ var Products = React.createClass({
   },
   
   getSortObj: function(sortStr) {
-	  var sortObj = {str: '', query: {}};
-	  	if (sortStr !== '') {
-	  		sortObj.str = sortStr;
-			sortObj.search = '?sort='+sortStr;
-			sortObj.query = {sort:sortStr};		
-		}
+	  var sortObj = {str: '', search:'', query: {}};
+	  if (sortStr !== '') {
+	  	sortObj.str = sortStr;
+		sortObj.search = '?sort='+sortStr;
+		sortObj.query = {sort:sortStr};		
+	  }
 	  return sortObj;
   },
   
@@ -71,7 +71,7 @@ var Products = React.createClass({
 });
 
 var SortList = React.createClass({
-	render: function() {
+	render: function() {	
 		var activeCategoryId = this.props.activeCategoryId;
 		var sortObj = this.props.sortObj;
 		var href = '/products/';
