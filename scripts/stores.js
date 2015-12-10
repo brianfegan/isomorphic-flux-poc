@@ -1,8 +1,8 @@
 var Fluxxor = require('fluxxor');
 var request = require('superagent');
-var constants = require('./constants');
+import {constants} from './constants';
 
-exports.CategoriesStore = Fluxxor.createStore({
+export var CategoriesStore = Fluxxor.createStore({
   initialize: function() {
     this.state = {
     	categories: []
@@ -47,7 +47,7 @@ exports.CategoriesStore = Fluxxor.createStore({
   
 });
 
-exports.ProductsStore = Fluxxor.createStore({
+export var ProductsStore = Fluxxor.createStore({
   initialize: function() {
 	this.state = {
 		products: [],

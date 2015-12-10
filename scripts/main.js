@@ -8,14 +8,14 @@ var createHistory = require('history/lib/createBrowserHistory');
 var history = createHistory();
 
 // Require App Modules
-var actions = require('./actions');
-var ProductsStore = require('./stores').ProductsStore;
-var CategoriesStore = require('./stores').CategoriesStore;
-var Products = require('./products');
+import {actions} from './actions';
+import {ProductsStore,CategoriesStore} from './stores';
+import {Products} from './products';
+import {hydrate} from './isomorphic';
 
 // set up flux instance and prepopulate stores based on server rendered data
 var flux = new Fluxxor.Flux({ProductsStore: new ProductsStore(), CategoriesStore: new CategoriesStore()}, actions);
-flux.hydrate = require('./isomorphic').hydrate;
+flux.hydrate = hydrate;
 flux.hydrate(window.fluxData);
 
 var App = React.createClass({

@@ -1,7 +1,7 @@
-var constants = require('./constants');
-var loadStoresData = require('./isomorphic').loadStoresData;
+import {constants} from './constants';
+import {loadStoresData} from './isomorphic';
 
-var actions = {
+export var actions = {
   loadCategoriesSuccess: function(data) {
 	this.dispatch(constants.LOAD_CATEGORIES_SUCCESS, {categories:data});
   },
@@ -10,5 +10,3 @@ var actions = {
   },
   serverFetch: loadStoresData
 };
-
-module.exports = actions;

@@ -1,10 +1,10 @@
-require("node-jsx").install();
+require('babel-core/register');
 var React = require("react");
 var Fluxxor = require('fluxxor');
-var actions = require('../scripts/actions');
+var actions = require('../scripts/actions').actions;
 var ProductsStore = require('../scripts/stores').ProductsStore;
 var CategoriesStore = require('../scripts/stores').CategoriesStore;
-var Products = React.createFactory(require("../scripts/products"));
+var Products = React.createFactory(require("../scripts/products").Products);
 
 var express = require('express');
 var router = express.Router();
@@ -16,7 +16,7 @@ var flux = new Fluxxor.Flux({
 
 flux.serialize = require('../scripts/isomorphic').serialize;
 
-/* GET products page. */
+// GET products page.
 router.get('/:categoryId?', function(req, res, next) {
 	var categoryId = req.params.categoryId;
 	if (typeof categoryId === 'undefined') {

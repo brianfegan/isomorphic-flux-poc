@@ -10,7 +10,7 @@ var storeReady = function() {
 };
 
 // Add an action that can be used to populate store state data on the server
-exports.loadStoresData = function(callbackFn, data) {
+export function loadStoresData(callbackFn, data) {
 	allStoresReady = callbackFn;
 	var stores = this.flux.stores, key;
 	for (key in stores) {
@@ -24,7 +24,7 @@ exports.loadStoresData = function(callbackFn, data) {
 };
 
 //Add our own custom serialize and hydrate methods.
-exports.serialize = function() {
+export function serialize() {
     var data = {}, stores = this.stores;
     for (var key in stores) {
     	if (stores.hasOwnProperty(key) && (typeof stores[key].getState === 'function')) {
@@ -34,7 +34,7 @@ exports.serialize = function() {
     return encodeURI(JSON.stringify(data));
 };
 
-exports.hydrate = function(data) {
+export function hydrate(data) {
 	var stores = this.stores;
 	data = JSON.parse(decodeURI(data));
 	for (var key in data) {

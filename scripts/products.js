@@ -5,7 +5,7 @@ var Link = require('react-router').Link;
 var FluxMixin = Fluxxor.FluxMixin(React),
 	StoreWatchMixin = Fluxxor.StoreWatchMixin;
 
-var Products = React.createClass({
+export var Products = React.createClass({
   mixins: [FluxMixin, StoreWatchMixin("ProductsStore", "CategoriesStore")],
   
   getProducts: function(props) {
@@ -161,5 +161,3 @@ var ProductsList = React.createClass({
 		);
 	}
 });
-		
-module.exports = Products;
