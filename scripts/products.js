@@ -119,7 +119,7 @@ var FiltersList = React.createClass({
 			href = '/products',
 			activeCategoryId = this.props.activeCategoryId,
 			allClassName = (activeCategoryId === '') ? 'selected' : '';
-		this.props.categories.forEach(function(category){
+		this.props.categories.forEach(category => {
 			var className = (parseInt(activeCategoryId, 10) === category.id) ? 'selected' : '';
 			items.push(<FilterItem category={category} className={className} key={category.id} sortObj={sortObj} />);
 		});
@@ -151,7 +151,7 @@ var ProductItem = React.createClass({
 var ProductsList = React.createClass({
 	render: function() {
 		var items = [];
-		this.props.products.forEach(function(product){
+		this.props.products.forEach(product => {
 			items.push(<ProductItem product={product} key={product.id} />);
 		});
 		return (

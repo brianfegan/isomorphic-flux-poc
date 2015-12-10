@@ -19,10 +19,9 @@ export var CategoriesStore = Fluxxor.createStore({
   },
     
   loadStoreData: function(serverCbFn) {
-	  var that = this;
-	  this.req = request.get(constants.API_URL_DEV+'categories').end(function(err, resp) {
-		  that.flux.actions.loadCategoriesSuccess(resp.body);
-		  that.req = null;
+	  this.req = request.get(constants.API_URL_DEV+'categories').end( (err, resp) => {
+		  this.flux.actions.loadCategoriesSuccess(resp.body);
+		  this.req = null;
 		  if (typeof serverCbFn === 'function') {
 			  serverCbFn();
 		  }
@@ -70,14 +69,13 @@ export var ProductsStore = Fluxxor.createStore({
   loadStoreData: function(serverCbFn, data) {
 	  //console.log('loadStoreData...getProducts');
 	  //console.log(data);
-	  var that = this;
 	  var url = constants.API_URL_DEV + 'products/' + data.categoryId;
 	  if (data.sort !== '') {
 		  url = url + '?sort=' + data.sort;
 	  }
-      this.req = request.get(url).end(function(err, resp) {
-		  that.flux.actions.loadProductsSuccess(resp.body, data.categoryId, data.sort);
-		  that.req = null;
+      this.req = request.get(url).end( (err, resp) => {
+		  this.flux.actions.loadProductsSuccess(resp.body, data.categoryId, data.sort);
+		  this.req = null;
 		  if (typeof serverCbFn === 'function') {
 			  serverCbFn();
 		  }

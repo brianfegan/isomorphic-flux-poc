@@ -14,11 +14,9 @@ export function loadStoresData(callbackFn, data) {
 	allStoresReady = callbackFn;
 	var stores = this.flux.stores, key;
 	for (key in stores) {
-		if (stores.hasOwnProperty(key)) {
-			if (typeof stores[key].loadStoreData === 'function') {
-				storesCt++;
-				stores[key].loadStoreData(storeReady, data);  
-			}
+		if (stores.hasOwnProperty(key) && (typeof stores[key].loadStoreData === 'function')) {
+			storesCt++;
+			stores[key].loadStoreData(storeReady, data);  
 		}
 	}
 };
