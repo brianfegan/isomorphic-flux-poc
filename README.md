@@ -10,8 +10,8 @@ An isomorphic JavaScript proof of concept utilizing:
 Other major dependencies include:
 * [React Router](https://github.com/rackt/react-router)
 * [Superagent](https://visionmedia.github.io/superagent/)
-* [Browserify](http://browserify.org/)
-* [Gulp](http://gulpjs.com/)
+* [Webpack](https://webpack.github.io/)
+* [Babel](http://babeljs.io/)
 
 ## Installation
 
@@ -43,10 +43,10 @@ npm install
 
 ## Run the App
 
-We just need to run gulp and start our app.
+We just need to run webpack and start our app.
 
 ```
-gulp
+webpack --watch
 npm start
 ```
 
