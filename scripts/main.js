@@ -1,10 +1,9 @@
 // Require Libraries
-var React = require('react');
-var Fluxxor = require('fluxxor');
-var ReactRouter = require('react-router');
-var Router = ReactRouter.Router;
-var Route = ReactRouter.Route;
-var createHistory = require('history/lib/createBrowserHistory');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import Fluxxor from 'fluxxor';
+import {Router,Route} from 'react-router';
+import createHistory from 'history/lib/createBrowserHistory';
 var history = createHistory();
 
 // Require App Modules
@@ -24,7 +23,7 @@ var App = React.createClass({
 	}
 });
 
-React.render((
+ReactDOM.render((
 	<Router history={history}>
 		<Route path="/" component={App}>
 			<Route path="products(/:categoryId)" component={Products} />

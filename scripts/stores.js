@@ -1,5 +1,5 @@
-var Fluxxor = require('fluxxor');
-var request = require('superagent');
+import Fluxxor from 'fluxxor';
+import request from 'superagent';
 import {constants} from './constants';
 
 export var CategoriesStore = Fluxxor.createStore({

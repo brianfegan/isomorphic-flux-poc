@@ -1,6 +1,6 @@
-var React = require('react');
-var Fluxxor = require('fluxxor');
-var Link = require('react-router').Link;
+import React from 'react';
+import Fluxxor from 'fluxxor';
+import {Link} from 'react-router';
 
 var FluxMixin = Fluxxor.FluxMixin(React),
 	StoreWatchMixin = Fluxxor.StoreWatchMixin;

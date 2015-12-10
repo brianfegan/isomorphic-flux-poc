@@ -1,5 +1,6 @@
 require('babel-core/register');
 var React = require("react");
+var ReactDOMServer = require('react-dom/server');
 var Fluxxor = require('fluxxor');
 var actions = require('../scripts/actions').actions;
 var ProductsStore = require('../scripts/stores').ProductsStore;
@@ -34,7 +35,7 @@ router.get('/:categoryId?', function(req, res, next) {
 	// Call serverFetch action to prepopulate data stores
 	flux.actions.serverFetch(function(){
 		var fluxData = flux.serialize();
-		var markup = React.renderToString(HtmlElement);
+		var markup = ReactDOMServer.renderToString(HtmlElement);
 		res.render('home', {
 			markup: markup,
 			fluxData: fluxData,
