@@ -1,4 +1,9 @@
-export var constants = {
+import {Map} from 'immutable';
+
+export const constants = {
+	INITIAL_STATE: Map(),
+	SET_PRODUCTS: 'SET_PRODUCTS',
+	SET_CATEGORIES: 'SET_CATEGORIES',
 	LOAD_PRODUCTS_SUCCESS: 'LOAD_PRODUCTS_SUCCESS',
 	LOAD_CATEGORIES_SUCCESS: 'LOAD_CATEGORIES_SUCCESS',
 	API_URL_DEV: 'http://localhost:3000/api/'

@@ -1,3 +1,17 @@
+var express = require('express');
+var router = express.Router();
+
+router.get('/:categoryId?', function(req, res, next) {
+	res.render('home', {
+		markup: '',
+		fluxData: '',
+		title: 'Express App'
+	});
+});
+
+module.exports = router;
+
+/*
 require('babel-core/register');
 var React = require("react");
 var ReactDOMServer = require('react-dom/server');
@@ -45,3 +59,4 @@ router.get('/:categoryId?', function(req, res, next) {
 });
 
 module.exports = router;
+*/

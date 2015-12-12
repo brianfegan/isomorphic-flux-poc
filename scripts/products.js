@@ -1,32 +1,32 @@
 import React from 'react';
-import Fluxxor from 'fluxxor';
+//import Fluxxor from 'fluxxor';
 import {Link} from 'react-router';
 
-var FluxMixin = Fluxxor.FluxMixin(React),
-	StoreWatchMixin = Fluxxor.StoreWatchMixin;
+//var FluxMixin = Fluxxor.FluxMixin(React),
+//	StoreWatchMixin = Fluxxor.StoreWatchMixin;
 
 export var Products = React.createClass({
-  mixins: [FluxMixin, StoreWatchMixin("ProductsStore", "CategoriesStore")],
+  //mixins: [FluxMixin, StoreWatchMixin("ProductsStore", "CategoriesStore")],
   
-  getProducts: function(props) {
-	return this.getFlux().store("ProductsStore").getProducts(this.getNormalizedProp(props.params.categoryId), this.getNormalizedProp(props.query.sort));
-  },
+  //getProducts: function(props) {
+//	return this.getFlux().store("ProductsStore").getProducts(this.getNormalizedProp(props.params.categoryId), this.getNormalizedProp(props.query.sort));
+  //},
 
-  getStateFromFlux: function() {
-    return {
-    	products: this.getProducts(this.props),
-    	categories: this.getFlux().store("CategoriesStore").getCategories()
-    }
-  },
+  //getStateFromFlux: function() {
+   // return {
+    //	products: this.getProducts(this.props),
+    //	categories: this.getFlux().store("CategoriesStore").getCategories()
+    //}
+  //},
 
   /*componentDidMount: function() {
 	  this.loadProducts(this.props);
 	  this.setState({categories: this.getFlux().store("CategoriesStore").getCategories(), products:this.getProducts(this.props)});
   },*/
   
-  componentWillReceiveProps: function(nextProps) {
-	  this.setState({products:this.getProducts(nextProps)});
-  },
+  //componentWillReceiveProps: function(nextProps) {
+//	  this.setState({products:this.getProducts(nextProps)});
+  //},
   
   getNormalizedProp: function(prop) {
 	  if (typeof prop === 'undefined') {
@@ -46,17 +46,21 @@ export var Products = React.createClass({
   },
   
   render: function() {
-	var sortObj = this.getSortObj(this.getNormalizedProp(this.props.query.sort));
-	var activeCategoryId = this.getNormalizedProp(this.props.params.categoryId);
+	//var sortObj = this.getSortObj(this.getNormalizedProp(this.props.query.sort));
+	var sortObj = this.getSortObj(this.getNormalizedProp(this.props.sortStr));
+	//var activeCategoryId = this.getNormalizedProp(this.props.params.categoryId);
+	var activeCategoryId = this.getNormalizedProp(this.props.categoryId);
+	var categories = this.props.categories; //was this.state.categories
+	var products = this.props.products;	   //was this.state.products
 	return (
     	<div id="wrapper">
 			<header>
 				<div><h1>&#60;codetest&#62;</h1></div>
-				<FiltersList categories={this.state.categories} activeCategoryId={activeCategoryId} sortObj={sortObj} />
+				<FiltersList categories={categories} activeCategoryId={activeCategoryId} sortObj={sortObj} />
 			</header>
 			<div id="main">
 				<section id="content">
-					<ProductsList products={this.state.products} />	
+					<ProductsList products={products} />
 				</section>
 				<aside>
 					<SortList activeCategoryId={activeCategoryId} sortObj={sortObj} />
@@ -112,7 +116,7 @@ var FilterItem = React.createClass({
 });
 
 var FiltersList = React.createClass({
-	mixins: [FluxMixin],
+	//mixins: [FluxMixin],
 	render: function() {
 		var items = [],
 			sortObj = this.props.sortObj,
