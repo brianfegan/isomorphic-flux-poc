@@ -1,11 +1,12 @@
 import React from 'react';
+import { connect } from 'react-redux'
 //import Fluxxor from 'fluxxor';
 import {Link} from 'react-router';
 
 //var FluxMixin = Fluxxor.FluxMixin(React),
 //	StoreWatchMixin = Fluxxor.StoreWatchMixin;
 
-export var Products = React.createClass({
+let Products = React.createClass({
   //mixins: [FluxMixin, StoreWatchMixin("ProductsStore", "CategoriesStore")],
   
   //getProducts: function(props) {
@@ -165,3 +166,15 @@ var ProductsList = React.createClass({
 		);
 	}
 });
+
+function select(state) {
+	state = state.toJS();
+	return {
+		categories: state.categories,
+		products: state.products.items,
+		categoryId: state.products.activeCategoryId,
+		sortStr: state.products.sortStr
+	};
+}
+
+export default connect(select)(Products);
