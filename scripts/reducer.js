@@ -3,9 +3,9 @@ import {Map, List} from 'immutable';
 import {loadStoreData} from './isomorphic';
 import {constants} from './constants';
 
-export default function reducer(state = constants.INITIAL_STATE, action) {
-    console.log(action.type);
-    //console.log(action);
+export default function reducer(state = Map(), action) {
+    //console.log(action.type);
+    console.log(action);
     switch (action.type) {
         case constants.LOAD_SERVER:
             setTimeout(function(){

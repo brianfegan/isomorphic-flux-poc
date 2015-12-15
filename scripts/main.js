@@ -3,7 +3,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {createStore} from 'redux';
 import {Provider} from 'react-redux';
-//import Fluxxor from 'fluxxor';
+import {Map, List} from 'immutable';
 //import {Router,Route} from 'react-router';
 //import createHistory from 'history/lib/createBrowserHistory';
 //var history = createHistory();
@@ -12,14 +12,19 @@ import {Provider} from 'react-redux';
 import {constants} from './constants';
 import reducer from './reducer';
 import Products from './products';
-//import {hydrate} from './isomorphic';
+import {decode} from './isomorphic';
 
-// create our initial store state
-const store = createStore(reducer);
-
-// temp code to populate redux state
-store.dispatch({type:constants.LOAD_CATEGORIES, store:store});
-store.dispatch({type:constants.LOAD_PRODUCTS, store:store, categoryId:'', sort:''});
+// create store, prepopulate with server data, or load initial data
+var store;
+if (window.stateData && window.stateData.length) {
+    let window_state = decode(window.stateData);
+    let initial_state = Map( {categories:List(window_state.categories), products:Map(window_state.products)} );
+    store = createStore(reducer, initial_state);
+} else {
+    store = createStore(reducer);
+    store.dispatch({type:constants.LOAD_CATEGORIES, store:store});
+    store.dispatch({type:constants.LOAD_PRODUCTS, store:store, categoryId:'', sort:''});
+}
 
 ReactDOM.render(
     <Provider store={store}>
@@ -27,11 +32,6 @@ ReactDOM.render(
     </Provider>,
     document.getElementById("body")
 );
-
-// set up flux instance and prepopulate stores based on server rendered data
-//var flux = new Fluxxor.Flux({ProductsStore: new ProductsStore(), CategoriesStore: new CategoriesStore()}, actions);
-//flux.hydrate = hydrate;
-//flux.hydrate(window.fluxData);
 
 //var App = React.createClass({
 //	render: function() {
