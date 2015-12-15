@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux'
 //import Fluxxor from 'fluxxor';
+import {getNormalizedProp, loadProducts} from './creators';
 import {Link} from 'react-router';
 
 //var FluxMixin = Fluxxor.FluxMixin(React),
@@ -29,28 +30,31 @@ let Products = React.createClass({
 //	  this.setState({products:this.getProducts(nextProps)});
   //},
   
-  getNormalizedProp: function(prop) {
-	  if (typeof prop === 'undefined') {
-		  prop = '';
-	  }
-	  return prop;
-  },
+  //getNormalizedProp: function(prop) {
+	//  if (typeof prop === 'undefined') {
+	//	  prop = '';
+	//  }
+	//  return prop;
+  //},
   
-  getSortObj: function(sortStr) {
+  getSortObj: function(sort) {
 	  var sortObj = {str: '', search:'', query: {}};
-	  if (sortStr !== '') {
-	  	sortObj.str = sortStr;
-		sortObj.search = '?sort='+sortStr;
-		sortObj.query = {sort:sortStr};		
+	  if (sort !== '') {
+	  	sortObj.str = sort;
+		sortObj.search = '?sort='+sort;
+		sortObj.query = {sort:sort};
 	  }
 	  return sortObj;
   },
   
   render: function() {
 	//var sortObj = this.getSortObj(this.getNormalizedProp(this.props.query.sort));
-	var sortObj = this.getSortObj(this.getNormalizedProp(this.props.sortStr));
+	  //console.log('this.props...');
+	  //console.log(this.props);
+	//loadProducts(this.props.params.categoryId, this.props.query.sort, products);
+	var sortObj = this.getSortObj(getNormalizedProp(this.props.sort));
 	//var activeCategoryId = this.getNormalizedProp(this.props.params.categoryId);
-	var activeCategoryId = this.getNormalizedProp(this.props.categoryId);
+	var activeCategoryId = getNormalizedProp(this.props.categoryId);
 	var categories = this.props.categories; //was this.state.categories
 	var products = this.props.products;	   //was this.state.products
 	return (
@@ -173,7 +177,7 @@ function select(state) {
 		categories: state.categories,
 		products: state.products.items,
 		categoryId: state.products.activeCategoryId,
-		sortStr: state.products.sortStr
+		sort: state.products.activeSort
 	};
 }
 

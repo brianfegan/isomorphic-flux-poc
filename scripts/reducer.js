@@ -37,13 +37,13 @@ export default function reducer(state = Map(), action) {
                 return state.set('products', Map({
                     items: [],
                     activeCategoryId: '',
-                    activeSortStr: ''
+                    activeSort: ''
                 }));
             }
         case constants.LOAD_CATEGORIES_SUCCESS:
             return state.set('categories', List(action.categories));
         case constants.LOAD_PRODUCTS_SUCCESS:
-            return state.set('products', Map({items:action.items, activeCategoryId:action.categoryId, activeSortStr:action.sort}));
+            return state.set('products', Map({items:action.items, activeCategoryId:action.categoryId, activeSort:action.sort}));
     };
     return state;
 }
