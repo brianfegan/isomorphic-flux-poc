@@ -1,13 +1,11 @@
 //require('babel-core/register');
-//import React from 'react';
-//import ReactDOMServer from 'react-dom/server';
+import React from 'react';
+import ReactDOMServer from 'react-dom/server';
 import {createStore} from 'redux';
-//import {Provider} from 'react-redux';
+import {Provider} from 'react-redux';
 
 import reducer from '../scripts/reducer';
-//var Products = React.createFactory(require("../scripts/products").Products);
-//import Products from '../scripts/products';
-//Products = React.createFactory(Products);
+import Products from '../scripts/products';
 
 var express = require('express');
 var router = express.Router();
@@ -21,27 +19,19 @@ router.get('/:categoryId?', function(req, res, next) {
 	if ( (sort !== 'priceasc') && (sort !== 'pricedesc') ) {
 		sort = '';
 	}
-	//res.render('home', {
-	//	markup: '',
-	//	fluxData: '',
-	//	title: 'Express App'
-	//});
-	//var HtmlElement = React.createElement(Products, {
-	//	flux: flux,
-	//	params: {categoryId:categoryId},
-	//	query: {sort:sort}
-	//});
-	// create a data store and retrieve data
+	// create a data store, retrieve data, render markup
 	var state;
 	const actions = [{type:'LOAD_CATEGORIES'},{type:'LOAD_PRODUCTS', categoryId:categoryId, sort:sort}];
 	const store = createStore(reducer);
 	store.dispatch({type:'LOAD_SERVER', store:store, actions:actions, serverCbFn:function(){
-		console.log('server data ready!');
 		state = store.getState().toJS();
-		//console.log(state);
-		console.log(encodeURI(JSON.stringify(state)));
+		let markup = ReactDOMServer.renderToString(
+			<Provider store={store}>
+				<Products />
+			</Provider>
+		);
 		res.render('home', {
-			markup: '',
+			markup: markup,
 			stateData: encodeURI(JSON.stringify(state)),
 			title: 'Express App'
 		});
