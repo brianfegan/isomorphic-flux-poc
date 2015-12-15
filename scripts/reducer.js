@@ -1,20 +1,21 @@
 import request from 'superagent';
 import {Map, List} from 'immutable';
 import {loadStoreData} from './isomorphic';
-import {constants} from './constants';
+import constants from './constants';
+import {getStore} from './store';
 
 export default function reducer(state = Map(), action) {
-    //console.log(action.type);
     console.log(action);
+    let store = getStore();
     switch (action.type) {
         case constants.LOAD_SERVER:
             setTimeout(function(){
-                loadStoreData(action.store, action.serverCbFn, action.actions);
+                loadStoreData(action.serverCbFn, action.actions);
             }, 0);
             break;
         case constants.LOAD_CATEGORIES:
             request.get(constants.API_URL_DEV+'categories').end( (err, resp) => {
-                action.store.dispatch({type:constants.LOAD_CATEGORIES_SUCCESS, categories:resp.body});
+                store.dispatch({type:constants.LOAD_CATEGORIES_SUCCESS, categories:resp.body});
                 if (typeof action.serverCbFn === 'function') {
                     action.serverCbFn();
                 }
@@ -26,7 +27,7 @@ export default function reducer(state = Map(), action) {
                 url = url + '?sort=' + action.sort;
             }
             request.get(url).end( (err, resp) => {
-                action.store.dispatch({type:constants.LOAD_PRODUCTS_SUCCESS, items:resp.body, categoryId:action.categoryId, sort:action.sort});
+                store.dispatch({type:constants.LOAD_PRODUCTS_SUCCESS, items:resp.body, categoryId:action.categoryId, sort:action.sort});
                 if (typeof action.serverCbFn === 'function') {
                     action.serverCbFn();
                 }
@@ -36,14 +37,14 @@ export default function reducer(state = Map(), action) {
             } else {
                 return state.set('products', Map({
                     items: [],
-                    activeCategoryId: '',
-                    activeSort: ''
+                    categoryId: '',
+                    sort: ''
                 }));
             }
         case constants.LOAD_CATEGORIES_SUCCESS:
             return state.set('categories', List(action.categories));
         case constants.LOAD_PRODUCTS_SUCCESS:
-            return state.set('products', Map({items:action.items, activeCategoryId:action.categoryId, activeSort:action.sort}));
+            return state.set('products', Map({items:action.items, categoryId:action.categoryId, sort:action.sort}));
     };
     return state;
 }

@@ -1,6 +1,4 @@
-import {Map} from 'immutable';
-
-export const constants = {
+export default {
 	LOAD_SERVER: 'LOAD_SERVER',
 	LOAD_PRODUCTS: 'LOAD_PRODUCTS',
 	LOAD_CATEGORIES: 'LOAD_CATEGORIES',

@@ -1,42 +1,10 @@
 import React from 'react';
-import { connect } from 'react-redux'
-//import Fluxxor from 'fluxxor';
-import {getNormalizedProp, loadProducts} from './creators';
+import {connect} from 'react-redux'
 import {Link} from 'react-router';
 
-//var FluxMixin = Fluxxor.FluxMixin(React),
-//	StoreWatchMixin = Fluxxor.StoreWatchMixin;
+const SELECTED = 'selected';
 
 let Products = React.createClass({
-  //mixins: [FluxMixin, StoreWatchMixin("ProductsStore", "CategoriesStore")],
-  
-  //getProducts: function(props) {
-//	return this.getFlux().store("ProductsStore").getProducts(this.getNormalizedProp(props.params.categoryId), this.getNormalizedProp(props.query.sort));
-  //},
-
-  //getStateFromFlux: function() {
-   // return {
-    //	products: this.getProducts(this.props),
-    //	categories: this.getFlux().store("CategoriesStore").getCategories()
-    //}
-  //},
-
-  /*componentDidMount: function() {
-	  this.loadProducts(this.props);
-	  this.setState({categories: this.getFlux().store("CategoriesStore").getCategories(), products:this.getProducts(this.props)});
-  },*/
-  
-  //componentWillReceiveProps: function(nextProps) {
-//	  this.setState({products:this.getProducts(nextProps)});
-  //},
-  
-  //getNormalizedProp: function(prop) {
-	//  if (typeof prop === 'undefined') {
-	//	  prop = '';
-	//  }
-	//  return prop;
-  //},
-  
   getSortObj: function(sort) {
 	  var sortObj = {str: '', search:'', query: {}};
 	  if (sort !== '') {
@@ -48,27 +16,19 @@ let Products = React.createClass({
   },
   
   render: function() {
-	//var sortObj = this.getSortObj(this.getNormalizedProp(this.props.query.sort));
-	  //console.log('this.props...');
-	  //console.log(this.props);
-	//loadProducts(this.props.params.categoryId, this.props.query.sort, products);
-	var sortObj = this.getSortObj(getNormalizedProp(this.props.sort));
-	//var activeCategoryId = this.getNormalizedProp(this.props.params.categoryId);
-	var activeCategoryId = getNormalizedProp(this.props.categoryId);
-	var categories = this.props.categories; //was this.state.categories
-	var products = this.props.products;	   //was this.state.products
+	var sortObj = this.getSortObj(this.props.sort);
 	return (
     	<div id="wrapper">
 			<header>
 				<div><h1>&#60;codetest&#62;</h1></div>
-				<FiltersList categories={categories} activeCategoryId={activeCategoryId} sortObj={sortObj} />
+				<FiltersList categories={this.props.categories} categoryId={this.props.categoryId} sortObj={sortObj} />
 			</header>
 			<div id="main">
 				<section id="content">
-					<ProductsList products={products} />
+					<ProductsList products={this.props.products} />
 				</section>
 				<aside>
-					<SortList activeCategoryId={activeCategoryId} sortObj={sortObj} />
+					<SortList categoryId={this.props.categoryId} sortObj={sortObj} />
 				</aside>
 			</div>
 			<footer>
@@ -81,22 +41,21 @@ let Products = React.createClass({
 
 var SortList = React.createClass({
 	render: function() {	
-		var activeCategoryId = this.props.activeCategoryId;
-		var sortObj = this.props.sortObj;
+		const SELECTED = 'selected';
 		var href = '/products/';
 		var sortClasses = { alpha:'', priceasc:'', pricedesc:'' };
-		if (activeCategoryId !== '') {
-			href = href + activeCategoryId;
+		if (this.props.categoryId !== '') {
+			href = href + this.props.categoryId;
 		}
-		switch (sortObj.str) {
+		switch (this.props.sortObj.str) {
 			case 'priceasc':
-				sortClasses.priceasc = 'selected';
+				sortClasses.priceasc = SELECTED;
 				break;
 			case 'pricedesc':
-				sortClasses.pricedesc = 'selected';
+				sortClasses.pricedesc = SELECTED;
 				break;
 			default:
-				sortClasses.alpha = 'selected';
+				sortClasses.alpha = SELECTED;
 		}
 		return (
 			<div>
@@ -121,15 +80,14 @@ var FilterItem = React.createClass({
 });
 
 var FiltersList = React.createClass({
-	//mixins: [FluxMixin],
 	render: function() {
 		var items = [],
 			sortObj = this.props.sortObj,
-			href = '/products',
-			activeCategoryId = this.props.activeCategoryId,
-			allClassName = (activeCategoryId === '') ? 'selected' : '';
+			href = '/products/',
+			categoryId = this.props.categoryId,
+			allClassName = (categoryId === '') ? SELECTED : '';
 		this.props.categories.forEach(category => {
-			var className = (parseInt(activeCategoryId, 10) === category.id) ? 'selected' : '';
+			let className = (parseInt(categoryId, 10) === category.id) ? SELECTED : '';
 			items.push(<FilterItem category={category} className={className} key={category.id} sortObj={sortObj} />);
 		});
 		return (
@@ -176,8 +134,8 @@ function select(state) {
 	return {
 		categories: state.categories,
 		products: state.products.items,
-		categoryId: state.products.activeCategoryId,
-		sort: state.products.activeSort
+		categoryId: state.products.categoryId,
+		sort: state.products.sort
 	};
 }
 

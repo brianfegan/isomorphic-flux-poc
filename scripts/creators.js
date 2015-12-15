@@ -1,10 +1,10 @@
 import request from 'superagent';
-import {constants} from './constants';
+import constants from './constants';
 import {getStore} from './store';
 
 let products_req = null;
 
-export function getNormalizedProp(prop) {
+function getNormalizedProp(prop) {
     if (typeof prop === 'undefined') {
         prop = '';
     }
@@ -18,11 +18,7 @@ export function loadProducts(categoryId, sort) {
     let store = getStore();
     let state = store.getState().toJS();
 
-    console.log('categoryId='+categoryId);
-    console.log('sort='+sort);
-    console.log(state);
-
-    if ( products_req === null && ( (state.products.items.length === 0) || (state.products.activeCategoryId !== categoryId) || (state.products.activeSortStr !== sort) ) ){
-        store.dispatch({type:constants.LOAD_PRODUCTS, store:store, categoryId:categoryId, sort:sort});
+    if ( products_req === null && ( (state.products.categoryId !== categoryId) || (state.products.sort !== sort) ) ){
+        store.dispatch({type:constants.LOAD_PRODUCTS, categoryId:categoryId, sort:sort});
     }
 }

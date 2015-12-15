@@ -5,9 +5,10 @@ An isomorphic JavaScript proof of concept utilizing:
 * [Node](https://nodejs.org/en/)
 * [Express](http://expressjs.com/en/)
 * [MongoDB](https://docs.mongodb.org/manual/)
-* [Fluxxor](http://fluxxor.com/).
+* [Redux](http://redux.js.org/)
 
 Other major dependencies include:
+* [Immutable](https://facebook.github.io/immutable-js/)
 * [React Router](https://github.com/rackt/react-router)
 * [Superagent](https://visionmedia.github.io/superagent/)
 * [Webpack](https://webpack.github.io/)
