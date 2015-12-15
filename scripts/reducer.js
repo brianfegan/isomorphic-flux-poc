@@ -1,11 +1,17 @@
 import request from 'superagent';
 import {Map, List} from 'immutable';
+import {loadStoreData} from './isomorphic';
 import {constants} from './constants';
 
 export default function reducer(state = constants.INITIAL_STATE, action) {
     console.log(action.type);
-    console.log(action);
+    //console.log(action);
     switch (action.type) {
+        case constants.LOAD_SERVER:
+            setTimeout(function(){
+                loadStoreData(action.store, action.serverCbFn, action.actions);
+            }, 0);
+            break;
         case constants.LOAD_CATEGORIES:
             request.get(constants.API_URL_DEV+'categories').end( (err, resp) => {
                 action.store.dispatch({type:constants.LOAD_CATEGORIES_SUCCESS, categories:resp.body});
@@ -22,7 +28,7 @@ export default function reducer(state = constants.INITIAL_STATE, action) {
             request.get(url).end( (err, resp) => {
                 action.store.dispatch({type:constants.LOAD_PRODUCTS_SUCCESS, items:resp.body, categoryId:action.categoryId, sort:action.sort});
                 if (typeof action.serverCbFn === 'function') {
-                    serverCbFn();
+                    action.serverCbFn();
                 }
             });
             if (state.get('products')){
@@ -41,18 +47,3 @@ export default function reducer(state = constants.INITIAL_STATE, action) {
     };
     return state;
 }
-
-/*
-import {constants} from './constants';
-import {loadStoresData} from './isomorphic';
-
-export var actions = {
-    loadCategoriesSuccess: function(data) {
-        this.dispatch(constants.LOAD_CATEGORIES_SUCCESS, {categories:data});
-    },
-    loadProductsSuccess: function(data, categoryId, sort) {
-        this.dispatch(constants.LOAD_PRODUCTS_SUCCESS, {products:data, categoryId:categoryId, sort:sort});
-    },
-    serverFetch: loadStoresData
-};
-*/

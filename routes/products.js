@@ -1,37 +1,17 @@
-var express = require('express');
-var router = express.Router();
+//require('babel-core/register');
+//import React from 'react';
+//import ReactDOMServer from 'react-dom/server';
+import {createStore} from 'redux';
+//import {Provider} from 'react-redux';
 
-router.get('/:categoryId?', function(req, res, next) {
-	res.render('home', {
-		markup: '',
-		fluxData: '',
-		title: 'Express App'
-	});
-});
-
-module.exports = router;
-
-/*
-require('babel-core/register');
-var React = require("react");
-var ReactDOMServer = require('react-dom/server');
-var Fluxxor = require('fluxxor');
-var actions = require('../scripts/actions').actions;
-var ProductsStore = require('../scripts/stores').ProductsStore;
-var CategoriesStore = require('../scripts/stores').CategoriesStore;
-var Products = React.createFactory(require("../scripts/products").Products);
+import reducer from '../scripts/reducer';
+//var Products = React.createFactory(require("../scripts/products").Products);
+//import Products from '../scripts/products';
+//Products = React.createFactory(Products);
 
 var express = require('express');
 var router = express.Router();
 
-var flux = new Fluxxor.Flux({
-	ProductsStore: new ProductsStore(),
-	CategoriesStore: new CategoriesStore()
-}, actions);
-
-flux.serialize = require('../scripts/isomorphic').serialize;
-
-// GET products page.
 router.get('/:categoryId?', function(req, res, next) {
 	var categoryId = req.params.categoryId;
 	if (typeof categoryId === 'undefined') {
@@ -41,22 +21,31 @@ router.get('/:categoryId?', function(req, res, next) {
 	if ( (sort !== 'priceasc') && (sort !== 'pricedesc') ) {
 		sort = '';
 	}
-	var HtmlElement = React.createElement(Products, {
-		flux: flux,
-		params: {categoryId:categoryId},
-		query: {sort:sort}
-	});
-	// Call serverFetch action to prepopulate data stores
-	flux.actions.serverFetch(function(){
-		var fluxData = flux.serialize();
-		var markup = ReactDOMServer.renderToString(HtmlElement);
+	//res.render('home', {
+	//	markup: '',
+	//	fluxData: '',
+	//	title: 'Express App'
+	//});
+	//var HtmlElement = React.createElement(Products, {
+	//	flux: flux,
+	//	params: {categoryId:categoryId},
+	//	query: {sort:sort}
+	//});
+	// create a data store and retrieve data
+	var state;
+	const actions = [{type:'LOAD_CATEGORIES'},{type:'LOAD_PRODUCTS', categoryId:categoryId, sort:sort}];
+	const store = createStore(reducer);
+	store.dispatch({type:'LOAD_SERVER', store:store, actions:actions, serverCbFn:function(){
+		console.log('server data ready!');
+		state = store.getState().toJS();
+		//console.log(state);
+		console.log(encodeURI(JSON.stringify(state)));
 		res.render('home', {
-			markup: markup,
-			fluxData: fluxData,
+			markup: '',
+			stateData: encodeURI(JSON.stringify(state)),
 			title: 'Express App'
 		});
-	}, {categoryId:categoryId, sort:sort});
+	}});
 });
 
 module.exports = router;
-*/
