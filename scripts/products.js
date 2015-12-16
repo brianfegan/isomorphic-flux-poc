@@ -1,10 +1,13 @@
 import React from 'react';
+import PureRenderMixin from 'react-addons-pure-render-mixin';
 import {connect} from 'react-redux'
 import {Link} from 'react-router';
 
 const SELECTED = 'selected';
 
 let Products = React.createClass({
+  mixins: [PureRenderMixin],
+
   getSortObj: function(sort) {
 	  var sortObj = {str: '', search:'', query: {}};
 	  if (sort !== '') {
@@ -40,7 +43,8 @@ let Products = React.createClass({
 });
 
 var SortList = React.createClass({
-	render: function() {	
+	mixins: [PureRenderMixin],
+	render: function() {
 		const SELECTED = 'selected';
 		var href = '/products/';
 		var sortClasses = { alpha:'', priceasc:'', pricedesc:'' };
@@ -69,6 +73,7 @@ var SortList = React.createClass({
 });
   
 var FilterItem = React.createClass({
+	mixins: [PureRenderMixin],
 	render: function() {
 		var category = this.props.category,
 			sortObj = this.props.sortObj,
@@ -80,6 +85,7 @@ var FilterItem = React.createClass({
 });
 
 var FiltersList = React.createClass({
+	mixins: [PureRenderMixin],
 	render: function() {
 		var items = [],
 			sortObj = this.props.sortObj,
@@ -100,6 +106,7 @@ var FiltersList = React.createClass({
 });
 
 var ProductItem = React.createClass({
+	mixins: [PureRenderMixin],
 	render: function() {
 		var image = '/img/'+this.props.product.image,
 			price = 'Price.......$'+this.props.product.price;
@@ -116,6 +123,7 @@ var ProductItem = React.createClass({
 });
 
 var ProductsList = React.createClass({
+	mixins: [PureRenderMixin],
 	render: function() {
 		var items = [];
 		this.props.products.forEach(product => {
@@ -132,10 +140,11 @@ var ProductsList = React.createClass({
 function select(state) {
 	state = state.toJS();
 	return {
-		categories: state.categories,
+		categories: state.categories.items,
 		products: state.products.items,
 		categoryId: state.products.categoryId,
-		sort: state.products.sort
+		sort: state.products.sort,
+		loading: state.products.loading
 	};
 }
 

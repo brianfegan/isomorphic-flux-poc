@@ -2,7 +2,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux';
-import {Map, List} from 'immutable';
+import {Map} from 'immutable';
 import {Router,Route} from 'react-router';
 import createHistory from 'history/lib/createBrowserHistory';
 var history = createHistory();
@@ -15,7 +15,7 @@ import {loadProducts} from './creators';
 
 // create store, prepopulate with server data
 let state = JSON.parse(decodeURI(window.__INITIAL_STATE__));
-let store = makeStore( Map({categories:List(state.categories), products:Map(state.products)}) );
+let store = makeStore( Map({categories:Map(state.categories), products:Map(state.products)}) );
 
 var App = React.createClass({
     componentWillReceiveProps: function(props){

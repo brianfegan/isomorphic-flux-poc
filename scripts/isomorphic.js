@@ -1,23 +1,23 @@
-import {getStore} from './store';
+var creatorsCt = 0;
+var creatorsReadyCt = 0;
+var allCreatorsReady = function(){};
 
-var actionsCt = 0;
-var actionsReadyCt = 0;
-var allActionsReady = function(){};
-
-var actionReady = function() {
-	actionsReadyCt++;
-	if (actionsReadyCt === actionsCt) {
-		allActionsReady();
+var creatorReady = function() {
+	creatorsReadyCt++;
+	if (creatorsReadyCt === creatorsCt) {
+		allCreatorsReady();
 	}
 };
 
 // Loop through and dispatch all actions passed in required to render on server
-export function loadStoreData(actions, callbackFn ) {
-	let store = getStore();
-	allActionsReady = callbackFn;
-	actions.forEach((action) => {
-		actionsCt++;
-		var newActionObj = Object.assign(action, {store:store, serverCbFn:actionReady});
-		store.dispatch(newActionObj);
+export function loadStoreData(creators, callbackFn ) {
+	allCreatorsReady = callbackFn;
+	creators.forEach((creator) => {
+		creatorsCt++;
+		if (typeof creator.data === 'object' && creator.data.length) {
+			creator.fn(...creator.data, creatorReady);
+		} else {
+			creator.fn(creatorReady);
+		}
 	});
 }

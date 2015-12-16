@@ -6,6 +6,7 @@ import Products from '../scripts/products';
 import constants from '../scripts/constants';
 import {makeStore} from '../scripts/store';
 import {loadStoreData} from '../scripts/isomorphic';
+import {loadCategories,loadProducts} from '../scripts/creators';
 
 var express = require('express');
 var router = express.Router();
@@ -17,9 +18,9 @@ router.get('/:categoryId?', function(req, res, next) {
 	if ( (sort !== 'priceasc') && (sort !== 'pricedesc') ) sort = '';
 
 	// create a data store, retrieve data, render markup
-	const actions = [{type:constants.LOAD_CATEGORIES},{type:constants.LOAD_PRODUCTS, categoryId:categoryId, sort:sort}];
+	const creators = [{fn:loadCategories}, {fn:loadProducts, data:[categoryId, sort]}];
 	const store = makeStore();
-	loadStoreData(actions, function(){
+	loadStoreData(creators, function(){
 		let initialState = store.getState().toJS();
 		let markup = ReactDOMServer.renderToString(
 			<Provider store={store}>
