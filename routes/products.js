@@ -1,3 +1,4 @@
+import express from 'express';
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import {Provider} from 'react-redux';
@@ -8,13 +9,12 @@ import {makeStore} from '../scripts/store';
 import {loadStoreData} from '../scripts/isomorphic';
 import {loadCategories,loadProducts} from '../scripts/creators';
 
-var express = require('express');
-var router = express.Router();
+const router = express.Router();
 
 router.get('/:categoryId?', function(req, res, next) {
-	var categoryId = req.params.categoryId;
+	let categoryId = req.params.categoryId;
 	if (typeof categoryId === 'undefined') categoryId = '';
-	var sort = req.query.sort;
+	let sort = req.query.sort;
 	if ( (sort !== 'priceasc') && (sort !== 'pricedesc') ) sort = '';
 
 	// create a data store, retrieve data, render markup

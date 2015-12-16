@@ -9,7 +9,7 @@ let Products = React.createClass({
   mixins: [PureRenderMixin],
 
   getSortObj: function(sort) {
-	  var sortObj = {str: '', search:'', query: {}};
+	  const sortObj = {str: '', search:'', query: {}};
 	  if (sort !== '') {
 	  	sortObj.str = sort;
 		sortObj.search = '?sort='+sort;
@@ -19,7 +19,7 @@ let Products = React.createClass({
   },
   
   render: function() {
-	var sortObj = this.getSortObj(this.props.sort);
+	const sortObj = this.getSortObj(this.props.sort);
 	return (
     	<div id="wrapper">
 			<header>
@@ -46,8 +46,8 @@ var SortList = React.createClass({
 	mixins: [PureRenderMixin],
 	render: function() {
 		const SELECTED = 'selected';
-		var href = '/products/';
-		var sortClasses = { alpha:'', priceasc:'', pricedesc:'' };
+		let href = '/products/';
+		let sortClasses = { alpha:'', priceasc:'', pricedesc:'' };
 		if (this.props.categoryId !== '') {
 			href = href + this.props.categoryId;
 		}
@@ -75,9 +75,9 @@ var SortList = React.createClass({
 var FilterItem = React.createClass({
 	mixins: [PureRenderMixin],
 	render: function() {
-		var category = this.props.category,
-			sortObj = this.props.sortObj,
-			href = '/products/'+category.id;
+		const category = this.props.category;
+		const sortObj = this.props.sortObj;
+		const href = '/products/'+category.id;
 		return (
 			<Link to={href} query={sortObj.query} href={href+sortObj.search} className={this.props.className}>{category.name}</Link>
 		);
@@ -87,11 +87,11 @@ var FilterItem = React.createClass({
 var FiltersList = React.createClass({
 	mixins: [PureRenderMixin],
 	render: function() {
-		var items = [],
-			sortObj = this.props.sortObj,
-			href = '/products/',
-			categoryId = this.props.categoryId,
-			allClassName = (categoryId === '') ? SELECTED : '';
+		let items = [];
+		const sortObj = this.props.sortObj;
+		const href = '/products/';
+		const categoryId = this.props.categoryId;
+		const allClassName = (categoryId === '') ? SELECTED : '';
 		this.props.categories.forEach(category => {
 			let className = (parseInt(categoryId, 10) === category.id) ? SELECTED : '';
 			items.push(<FilterItem category={category} className={className} key={category.id} sortObj={sortObj} />);
@@ -108,8 +108,8 @@ var FiltersList = React.createClass({
 var ProductItem = React.createClass({
 	mixins: [PureRenderMixin],
 	render: function() {
-		var image = '/img/'+this.props.product.image,
-			price = 'Price.......$'+this.props.product.price;
+		const image = '/img/'+this.props.product.image;
+		const price = 'Price.......$'+this.props.product.price;
 		return (
 			<li>
 				<a href="#">
@@ -125,7 +125,7 @@ var ProductItem = React.createClass({
 var ProductsList = React.createClass({
 	mixins: [PureRenderMixin],
 	render: function() {
-		var items = [];
+		let items = [];
 		this.props.products.forEach(product => {
 			items.push(<ProductItem product={product} key={product.id} />);
 		});

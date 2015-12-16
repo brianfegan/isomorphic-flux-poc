@@ -1,13 +1,13 @@
-var creatorsCt = 0;
-var creatorsReadyCt = 0;
-var allCreatorsReady = function(){};
+let creatorsCt = 0;
+let creatorsReadyCt = 0;
+let allCreatorsReady = function(){};
 
-var creatorReady = function() {
+function creatorReady () {
 	creatorsReadyCt++;
 	if (creatorsReadyCt === creatorsCt) {
 		allCreatorsReady();
 	}
-};
+}
 
 // Loop through and dispatch all actions passed in required to render on server
 export function loadStoreData(creators, callbackFn ) {
