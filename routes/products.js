@@ -1,11 +1,11 @@
-//require('babel-core/register');
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
-import {createStore} from 'redux';
 import {Provider} from 'react-redux';
 import reducer from '../scripts/reducer';
 import Products from '../scripts/products';
+import constants from '../scripts/constants';
 import {makeStore} from '../scripts/store';
+import {loadStoreData} from '../scripts/isomorphic';
 
 var express = require('express');
 var router = express.Router();
@@ -17,9 +17,9 @@ router.get('/:categoryId?', function(req, res, next) {
 	if ( (sort !== 'priceasc') && (sort !== 'pricedesc') ) sort = '';
 
 	// create a data store, retrieve data, render markup
-	const actions = [{type:'LOAD_CATEGORIES'},{type:'LOAD_PRODUCTS', categoryId:categoryId, sort:sort}];
+	const actions = [{type:constants.LOAD_CATEGORIES},{type:constants.LOAD_PRODUCTS, categoryId:categoryId, sort:sort}];
 	const store = makeStore();
-	store.dispatch({type:'LOAD_SERVER', actions:actions, serverCbFn:function(){
+	loadStoreData(actions, function(){
 		let initialState = store.getState().toJS();
 		let markup = ReactDOMServer.renderToString(
 			<Provider store={store}>
@@ -31,7 +31,7 @@ router.get('/:categoryId?', function(req, res, next) {
 			initialState: encodeURI(JSON.stringify(initialState)),
 			title: 'Express App'
 		});
-	}});
+	});
 });
 
 module.exports = router;

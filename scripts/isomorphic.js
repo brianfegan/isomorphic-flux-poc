@@ -12,7 +12,7 @@ var actionReady = function() {
 };
 
 // Loop through and dispatch all actions passed in required to render on server
-export function loadStoreData(callbackFn, actions) {
+export function loadStoreData(actions, callbackFn ) {
 	let store = getStore();
 	allActionsReady = callbackFn;
 	actions.forEach((action) => {

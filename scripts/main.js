@@ -8,7 +8,6 @@ import createHistory from 'history/lib/createBrowserHistory';
 var history = createHistory();
 
 // Require App Modules
-import constants from './constants';
 import reducer from './reducer';
 import Products from './products';
 import {makeStore} from './store';

@@ -1,6 +1,5 @@
 import request from 'superagent';
 import {Map, List} from 'immutable';
-import {loadStoreData} from './isomorphic';
 import constants from './constants';
 import {getStore} from './store';
 
@@ -8,11 +7,6 @@ export default function reducer(state = Map(), action) {
     console.log(action);
     let store = getStore();
     switch (action.type) {
-        case constants.LOAD_SERVER:
-            setTimeout(function(){
-                loadStoreData(action.serverCbFn, action.actions);
-            }, 0);
-            break;
         case constants.LOAD_CATEGORIES:
             request.get(constants.API_URL_DEV+'categories').end( (err, resp) => {
                 store.dispatch({type:constants.LOAD_CATEGORIES_SUCCESS, categories:resp.body});
