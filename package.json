@@ -11,7 +11,7 @@
     "debug": "~2.2.0",
     "express": "~4.13.1",
     "express-handlebars": "^2.0.1",
-    "history": "^1.13.0",
+    "history": "~1.13.0",
     "immutable": "^3.7.5",
     "mongodb": "~2.0.33",
     "monk": "~1.0.1",
@@ -26,7 +26,8 @@
     "superagent": "^1.4.0"
   },
   "devDependencies": {
-    "babel-core": "^6.3.15",
+    "babel-core": "^6.3.17",
+    "babel-loader": "^6.2.0",
     "babel-preset-es2015": "^6.3.13",
     "babel-preset-react": "^6.3.13",
     "webpack": "^1.12.9"
