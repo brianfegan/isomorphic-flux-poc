@@ -1,65 +1,37 @@
-var React = require('react');
-var Fluxxor = require('fluxxor');
-var Link = require('react-router').Link;
+import React from 'react';
+import PureRenderMixin from 'react-addons-pure-render-mixin';
+import {connect} from 'react-redux'
+import {Link} from 'react-router';
 
-var FluxMixin = Fluxxor.FluxMixin(React),
-	StoreWatchMixin = Fluxxor.StoreWatchMixin;
+const SELECTED = 'selected';
 
-var Products = React.createClass({
-  mixins: [FluxMixin, StoreWatchMixin("ProductsStore", "CategoriesStore")],
-  
-  getProducts: function(props) {
-	return this.getFlux().store("ProductsStore").getProducts(this.getNormalizedProp(props.params.categoryId), this.getNormalizedProp(props.query.sort));
-  },
+let Products = React.createClass({
+  mixins: [PureRenderMixin],
 
-  getStateFromFlux: function() {
-    return {
-    	products: this.getProducts(this.props),
-    	categories: this.getFlux().store("CategoriesStore").getCategories()
-    }
-  },
-
-  /*componentDidMount: function() {
-	  this.loadProducts(this.props);
-	  this.setState({categories: this.getFlux().store("CategoriesStore").getCategories(), products:this.getProducts(this.props)});
-  },*/
-  
-  componentWillReceiveProps: function(nextProps) {
-	  this.setState({products:this.getProducts(nextProps)});
-  },
-  
-  getNormalizedProp: function(prop) {
-	  if (typeof prop === 'undefined') {
-		  prop = '';
+  getSortObj: function(sort) {
+	  const sortObj = {str: '', search:'', query: {}};
+	  if (sort !== '') {
+	  	sortObj.str = sort;
+		sortObj.search = '?sort='+sort;
+		sortObj.query = {sort:sort};
 	  }
-	  return prop;
-  },
-  
-  getSortObj: function(sortStr) {
-	  var sortObj = {str: '', query: {}};
-	  	if (sortStr !== '') {
-	  		sortObj.str = sortStr;
-			sortObj.search = '?sort='+sortStr;
-			sortObj.query = {sort:sortStr};		
-		}
 	  return sortObj;
   },
   
   render: function() {
-	var sortObj = this.getSortObj(this.getNormalizedProp(this.props.query.sort));
-	var activeCategoryId = this.getNormalizedProp(this.props.params.categoryId);
+	const sortObj = this.getSortObj(this.props.sort);
 	return (
     	<div id="wrapper">
 			<header>
 				<div><h1>&#60;codetest&#62;</h1></div>
-				<FiltersList categories={this.state.categories} activeCategoryId={activeCategoryId} sortObj={sortObj} />
+				<FiltersList categories={this.props.categories} categoryId={this.props.categoryId} sortObj={sortObj} />
 			</header>
 			<div id="main">
 				<section id="content">
-					<ProductsList products={this.state.products} />	
+					<ProductsList products={this.props.products} />
 				</section>
 				<aside>
-					<SortList activeCategoryId={activeCategoryId} sortObj={sortObj} />
+					<SortList categoryId={this.props.categoryId} sortObj={sortObj} />
 				</aside>
 			</div>
 			<footer>
@@ -71,23 +43,23 @@ var Products = React.createClass({
 });
 
 var SortList = React.createClass({
+	mixins: [PureRenderMixin],
 	render: function() {
-		var activeCategoryId = this.props.activeCategoryId;
-		var sortObj = this.props.sortObj;
-		var href = '/products/';
-		var sortClasses = { alpha:'', priceasc:'', pricedesc:'' };
-		if (activeCategoryId !== '') {
-			href = href + activeCategoryId;
+		const SELECTED = 'selected';
+		let href = '/products/';
+		let sortClasses = { alpha:'', priceasc:'', pricedesc:'' };
+		if (this.props.categoryId !== '') {
+			href = href + this.props.categoryId;
 		}
-		switch (sortObj.str) {
+		switch (this.props.sortObj.str) {
 			case 'priceasc':
-				sortClasses.priceasc = 'selected';
+				sortClasses.priceasc = SELECTED;
 				break;
 			case 'pricedesc':
-				sortClasses.pricedesc = 'selected';
+				sortClasses.pricedesc = SELECTED;
 				break;
 			default:
-				sortClasses.alpha = 'selected';
+				sortClasses.alpha = SELECTED;
 		}
 		return (
 			<div>
@@ -101,10 +73,11 @@ var SortList = React.createClass({
 });
   
 var FilterItem = React.createClass({
+	mixins: [PureRenderMixin],
 	render: function() {
-		var category = this.props.category,
-			sortObj = this.props.sortObj,
-			href = '/products/'+category.id;
+		const category = this.props.category;
+		const sortObj = this.props.sortObj;
+		const href = '/products/'+category.id;
 		return (
 			<Link to={href} query={sortObj.query} href={href+sortObj.search} className={this.props.className}>{category.name}</Link>
 		);
@@ -112,15 +85,15 @@ var FilterItem = React.createClass({
 });
 
 var FiltersList = React.createClass({
-	mixins: [FluxMixin],
+	mixins: [PureRenderMixin],
 	render: function() {
-		var items = [],
-			sortObj = this.props.sortObj,
-			href = '/products',
-			activeCategoryId = this.props.activeCategoryId,
-			allClassName = (activeCategoryId === '') ? 'selected' : '';
-		this.props.categories.forEach(function(category){
-			var className = (parseInt(activeCategoryId, 10) === category.id) ? 'selected' : '';
+		let items = [];
+		const sortObj = this.props.sortObj;
+		const href = '/products/';
+		const categoryId = this.props.categoryId;
+		const allClassName = (categoryId === '') ? SELECTED : '';
+		this.props.categories.forEach(category => {
+			let className = (parseInt(categoryId, 10) === category.id) ? SELECTED : '';
 			items.push(<FilterItem category={category} className={className} key={category.id} sortObj={sortObj} />);
 		});
 		return (
@@ -133,9 +106,10 @@ var FiltersList = React.createClass({
 });
 
 var ProductItem = React.createClass({
+	mixins: [PureRenderMixin],
 	render: function() {
-		var image = '/img/'+this.props.product.image,
-			price = 'Price.......$'+this.props.product.price;
+		const image = '/img/'+this.props.product.image;
+		const price = 'Price.......$'+this.props.product.price;
 		return (
 			<li>
 				<a href="#">
@@ -149,9 +123,10 @@ var ProductItem = React.createClass({
 });
 
 var ProductsList = React.createClass({
+	mixins: [PureRenderMixin],
 	render: function() {
-		var items = [];
-		this.props.products.forEach(function(product){
+		let items = [];
+		this.props.products.forEach(product => {
 			items.push(<ProductItem product={product} key={product.id} />);
 		});
 		return (
@@ -161,5 +136,16 @@ var ProductsList = React.createClass({
 		);
 	}
 });
-		
-module.exports = Products;
+
+function select(state) {
+	state = state.toJS();
+	return {
+		categories: state.categories.items,
+		products: state.products.items,
+		categoryId: state.products.categoryId,
+		sort: state.products.sort,
+		loading: state.products.loading
+	};
+}
+
+export default connect(select)(Products);

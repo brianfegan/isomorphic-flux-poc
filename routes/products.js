@@ -1,46 +1,38 @@
-require("node-jsx").install();
-var React = require("react");
-var Fluxxor = require('fluxxor');
-var actions = require('../scripts/actions');
-var ProductsStore = require('../scripts/stores').ProductsStore;
-var CategoriesStore = require('../scripts/stores').CategoriesStore;
-var Products = React.createFactory(require("../scripts/products"));
+import express from 'express';
+import React from 'react';
+import ReactDOMServer from 'react-dom/server';
+import {Provider} from 'react-redux';
+import reducer from '../scripts/reducer';
+import Products from '../scripts/products';
+import constants from '../scripts/constants';
+import {makeStore} from '../scripts/store';
+import {loadStoreData} from '../scripts/isomorphic';
+import {loadCategories,loadProducts} from '../scripts/creators';
 
-var express = require('express');
-var router = express.Router();
+const router = express.Router();
 
-var flux = new Fluxxor.Flux({
-	ProductsStore: new ProductsStore(),
-	CategoriesStore: new CategoriesStore()
-}, actions);
-
-flux.serialize = require('../scripts/isomorphic').serialize;
-
-/* GET products page. */
 router.get('/:categoryId?', function(req, res, next) {
-	var categoryId = req.params.categoryId;
-	if (typeof categoryId === 'undefined') {
-		categoryId = '';
-	}
-	var sort = req.query.sort;
-	if ( (sort !== 'priceasc') && (sort !== 'pricedesc') ) {
-		sort = '';
-	}
-	var HtmlElement = React.createElement(Products, {
-		flux: flux,
-		params: {categoryId:categoryId},
-		query: {sort:sort}
-	});
-	// Call serverFetch action to prepopulate data stores
-	flux.actions.serverFetch(function(){
-		var fluxData = flux.serialize();
-		var markup = React.renderToString(HtmlElement);
+	let categoryId = req.params.categoryId;
+	if (typeof categoryId === 'undefined') categoryId = '';
+	let sort = req.query.sort;
+	if ( (sort !== 'priceasc') && (sort !== 'pricedesc') ) sort = '';
+
+	// create a data store, retrieve data, render markup
+	const creators = [{fn:loadCategories}, {fn:loadProducts, data:[categoryId, sort]}];
+	const store = makeStore();
+	loadStoreData(creators, function(){
+		let initialState = store.getState().toJS();
+		let markup = ReactDOMServer.renderToString(
+			<Provider store={store}>
+				<Products />
+			</Provider>
+		);
 		res.render('home', {
 			markup: markup,
-			fluxData: fluxData,
+			initialState: encodeURI(JSON.stringify(initialState)),
 			title: 'Express App'
 		});
-	}, {categoryId:categoryId, sort:sort});
+	});
 });
 
 module.exports = router;

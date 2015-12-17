@@ -1,33 +1,37 @@
 // Require Libraries
-var React = require('react');
-var Fluxxor = require('fluxxor');
-var ReactRouter = require('react-router');
-var Router = ReactRouter.Router;
-var Route = ReactRouter.Route;
-var createHistory = require('history/lib/createBrowserHistory');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import {Provider} from 'react-redux';
+import {Map} from 'immutable';
+import {Router,Route} from 'react-router';
+import createHistory from 'history/lib/createBrowserHistory';
 var history = createHistory();
 
 // Require App Modules
-var actions = require('./actions');
-var ProductsStore = require('./stores').ProductsStore;
-var CategoriesStore = require('./stores').CategoriesStore;
-var Products = require('./products');
+import reducer from './reducer';
+import Products from './products';
+import {makeStore} from './store';
+import {loadProducts} from './creators';
 
-// set up flux instance and prepopulate stores based on server rendered data
-var flux = new Fluxxor.Flux({ProductsStore: new ProductsStore(), CategoriesStore: new CategoriesStore()}, actions);
-flux.hydrate = require('./isomorphic').hydrate;
-flux.hydrate(window.fluxData);
+// create store, prepopulate with server data
+let state = JSON.parse(decodeURI(window.__INITIAL_STATE__));
+let store = makeStore( Map({categories:Map(state.categories), products:Map(state.products)}) );
 
 var App = React.createClass({
-	render: function() {
-		return (<Products flux={flux} params={this.props.params} query={this.props.location.query} />);
+    componentWillReceiveProps: function(props){
+        loadProducts(props.params.categoryId, props.location.query.sort);
+    },
+    render: function() {
+        return (<Products />);
 	}
 });
 
-React.render((
-	<Router history={history}>
-		<Route path="/" component={App}>
-			<Route path="products(/:categoryId)" component={Products} />
-		</Route>
-	</Router>
+ReactDOM.render((
+    <Provider store={store}>
+        <Router history={history}>
+            <Route path="/" component={App}>
+                <Route path="products(/:categoryId)" component={Products} />
+            </Route>
+        </Router>
+    </Provider>
 ), document.getElementById("body"));
